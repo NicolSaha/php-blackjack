@@ -3,24 +3,35 @@ declare(strict_types=1);
 
 class Player
 {
-    private array $cards;
-    private bool $lost = false;
 
-    public function hit($deck) : void
+    protected array $cards;
+    protected bool $lost = false;
+
+    public function hit(Deck $deck)
     {
-            if ($this->getScore() > 21) {
-                $this->lost = true;
-            } else {
+            if ($this->getScore() < 21) {
                 $hit_Card = $deck->drawCard();
                 array_push($this->cards, $hit_Card);
+            } else {
+                $this->lost = true;
             }
     }
 
-    public function surrender() : void
+    public function resetGameLost()
     {
-        if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'surrender') {
-            $this->lost = true;
+        if ($this->lost == true) {
+            session_unset();
         }
+    }
+
+    public function resetGame()
+    {
+            session_unset();
+    }
+
+    public function surrender()
+    {
+        return $this->lost = true;
     }
 
     public function getCards(): array
@@ -34,7 +45,7 @@ class Player
         foreach ($this->cards as $card) {
             $score += $card -> getValue();
         }
-        echo $score;
+        return $score;
     }
 
     public function hasLost()
@@ -49,13 +60,37 @@ class Player
         }
     }
 
-    public function __construct($deck)
+    public function __construct(Deck $deck)
     {
-        $playerCard_One = $deck->drawCard();
-        $playerCard_Two = $deck->drawCard();
-        $this->cards = [$playerCard_One, $playerCard_Two];
+        $Card_One = $deck->drawCard();
+        $Card_Two = $deck->drawCard();
+        $this->cards = [$Card_One, $Card_Two];
     }
 
 }
 
+class Dealer extends Player {
 
+    public function hit(Deck $deck)
+    {
+        if ($this->getScore() <= 15) {
+            parent::hit($deck);
+        }
+    }
+
+    public function playerSurrendered()
+    {
+       return $this->lost = false;
+    }
+
+    public function hasLost()
+    {
+        return parent::hasLost();
+    }
+
+    public function __construct(Deck $deck)
+    {
+        parent::__construct($deck);
+    }
+
+}

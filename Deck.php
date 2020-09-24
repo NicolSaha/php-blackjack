@@ -5,7 +5,7 @@ class Deck
 {
     private const CARDS_PER_SUIT = 14;
 
-    private $cards = [];
+    private array $cards = [];
 
     public function __construct() {
         $suits = [
@@ -26,7 +26,6 @@ class Deck
         shuffle($this->cards);
     }
 
-    /** @return Card[] */
     public function getCards() : array
     {
         return $this->cards;
