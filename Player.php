@@ -28,13 +28,13 @@ class Player
         return $this->cards;
     }
 
-    public function getScore(): int
+    public function getScore()
     {
         $score = 0;
         foreach ($this->cards as $card) {
             $score += $card -> getValue();
         }
-        return $score;
+        echo $score;
     }
 
     public function hasLost()
