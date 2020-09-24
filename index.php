@@ -21,6 +21,9 @@ function whatIsHappening() {
 }
 whatIsHappening();
 
+// Game Status
+$_GAMESTATUS = '';
+
 // Blackjack Session Initialised
 if (!isset($_SESSION['Created_Blackjack_Game'])) {
     $blackjack = new Blackjack();
@@ -37,27 +40,31 @@ if(isset($_POST['formChoice']) )
     $errorMessage = "";
 }
 
-if(empty($varChoiceNextStep))
+if(!isset($_POST['formChoice']) || $_POST['formChoice'] == "null" )
 {
-    $errorMessage = "<li>You forgot to make a choice!</li>";
+    $errorMessage = "<div class='alert alert-warning' role='warning'>Please make a choice! </div>";
+
 }
 
 // HIT Player
 if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'hit') {
     $blackjack->getPlayer()->hit($blackjack->getDeck());
     $_SESSION['Created_Blackjack_Game'] = serialize($blackjack);
+    $_GAMESTATUS = "<div class='alert alert-success' role='success'> PLAYER HITS </div>";
 }
 
 // Stand Player
 if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'stand') {
     $blackjack->getDealer()->hit($blackjack->getDeck());
     $_SESSION['Created_Blackjack_Game'] = serialize($blackjack);
+    $_GAMESTATUS = "<div class='alert alert-success' role='success'> PLAYER STANDS </div>";
 }
 
 // SURRENDER Player
 if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'surrender') {
     $blackjack->getPlayer()->surrender();
     $_SESSION['Created_Blackjack_Game'] = serialize($blackjack);
+    $_GAMESTATUS = "<div class='alert alert-danger' role='danger'> PLAYER SURRENDERED, DEALER WINS </div>";
 }
 
 
@@ -97,6 +104,8 @@ if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'surrender') {
         </fieldset>
         <input style='display: inline; margin-left: 15px; margin-bottom: 5px;' type="submit" name="submit-button" value="Submit" class="btn btn-sm btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off"/>
     </form>
+    <p> <?php echo $errorMessage ?> </p>
+    <p> <?php echo $_GAMESTATUS ?> </p>
 
     <H3> Player </H3>
     <p> <?php $blackjack->getPlayer()->showCards(); ?> </p>
