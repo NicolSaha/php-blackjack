@@ -9,24 +9,17 @@ class Player
 
     public function hit(Deck $deck)
     {
-            if ($this->getScore() < 21) {
+            if ($this->getScore() <= 21) {
                 $hit_Card = $deck->drawCard();
                 array_push($this->cards, $hit_Card);
-            } else {
-                $this->lost = true;
+            } elseif ($this->getScore() > 21) {
+                return $this->lost = true;
             }
-    }
-
-    public function resetGameLost()
-    {
-        if ($this->lost == true) {
-            session_unset();
-        }
     }
 
     public function resetGame()
     {
-            session_unset();
+        session_unset();
     }
 
     public function surrender()
