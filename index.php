@@ -82,8 +82,7 @@ if (isset($_POST['hit'])) {
 
 // Stand Player
 if (isset($_POST['stand'])) {
-    
-   // $blackjack->compareScores();
+    $blackjack->getDealer()->hit($blackjack->getDeck());
 
     // Compare Score
     $score_player = $blackjack->getPlayer()->getScore();
@@ -100,12 +99,12 @@ if (isset($_POST['stand'])) {
         $_OUTCOME_DEALER = $loser;
     }
 
-    if ($score_player > $score_dealer  && $score_player <= 21) {
+    if ($score_player > $score_dealer && $score_player <= 21) {
         $_OUTCOME_PLAYER = $winner;
         $_OUTCOME_DEALER = $loser;
     }
 
-    if ($score_player > $score_dealer  && $score_dealer <= 21) {
+    if ($score_dealer > $score_player && $score_dealer <= 21) {
         $_OUTCOME_PLAYER = $loser;
         $_OUTCOME_DEALER = $winner;
     }
@@ -126,7 +125,7 @@ if (isset($_POST['stand'])) {
 // SURRENDER Player
 if (isset($_POST['surrender'])) {
 
-    if ($blackjack->getPlayer()->surrender() == 1 || $blackjack->getDealer()->playerSurrendered() == 0  ) {
+    if ($blackjack->getPlayer()->surrender() == 1) {
         $_OUTCOME_DEALER = $winner;
         $_OUTCOME_PLAYER = $loser;
     }
@@ -150,7 +149,7 @@ if (isset($_POST['surrender'])) {
 </head>
 <body>
 <div class="container">
-    <h1 style='text-align: center;';>Blackjack</h1>
+    <h1 style='text-align: center;'>Blackjack</h1>
 
     <form method="post" action="" style='text-align: center; margin: 15px;'>
 
@@ -175,7 +174,7 @@ if (isset($_POST['surrender'])) {
     <H3 style='display: inline;'> Dealer <?php echo $_OUTCOME_DEALER; ?> </H3>
     <p style=' margin-top: -75px;'> <?php $blackjack->getDealer()->showCards(); ?> </p>
     <p style=' margin-top: -75px; margin-left: 15px;'> Score: <?php echo $blackjack->getDealer()->getScore(); ?> </p>
-
+</div>
 </body>
 </html>
 
