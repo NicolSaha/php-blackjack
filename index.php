@@ -82,11 +82,7 @@ if (isset($_POST['hit'])) {
 
 // Stand Player
 if (isset($_POST['stand'])) {
-
-    $blackjack->getDealer()->hit($blackjack->getDeck());
-    $blackjack->getPlayer()->hit($blackjack->getDeck());
-
-
+    
    // $blackjack->compareScores();
 
     // Compare Score
