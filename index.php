@@ -52,17 +52,27 @@ if(!isset($_POST['formChoice']) || $_POST['formChoice'] == "null" )
     $errorMessage = "<div style='text-align: center;' class='alert alert-warning' role='warning'>Please make a choice! </div>";
 }
 
+//TODO: hit functionality
+//TODO: stand functionality
+//TODO: comparescore functionality
+
 // HIT Player
 if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'hit') {
     $blackjack->getPlayer()->hit($blackjack->getDeck());
+    $blackjack->getDealer()->hit($blackjack->getDeck());
+
+    $blackjack->compareScores();
 
    if ($blackjack->getPlayer()->hasLost() == 'false' && $blackjack->getDealer()->hasLost() == 'true' ) {
         $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
         $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
-    } else {
+    }
+
+   if ($blackjack->getPlayer()->hasLost() == 'true' && $blackjack->getDealer()->hasLost() == 'false' ) {
         $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
         $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
     }
+
 
     $_GAMESTATUS = "<div style='text-align: center;' class='alert alert-success' role='success'> PLAYER HITS </div>";
     $_SESSION['Created_Blackjack_Game'] = serialize($blackjack);
@@ -76,16 +86,30 @@ if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'stand') {
     // Compare Score
     $score_player = $blackjack->getPlayer()->getScore();
     $score_dealer = $blackjack->getDealer()->getScore();
+
+    if ($score_dealer === $score_player) {
+        $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
+        $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
+    } elseif ($score_dealer = 21) {
+        $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
+        $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
+    } elseif ($score_player = 21) {
+        $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
+        $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
+    }
     if ($score_player > 21) {
         $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
         $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
-    } elseif ($score_dealer > 21) {
+    }
+    if ($score_dealer > 21) {
         $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
         $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
-    } elseif ($score_player > $score_dealer) {
+    }
+    if ($score_player > $score_dealer) {
         $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
         $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
-    } elseif ($score_dealer > $score_player) {
+    }
+    if ($score_dealer > $score_player) {
         $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
         $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
     }
