@@ -21,10 +21,16 @@ function whatIsHappening() {
 }
 //whatIsHappening();
 
-// Game Status
+// Game Status & Variables Defined
 $_GAMESTATUS = '';
 $_OUTCOME_PLAYER = '';
 $_OUTCOME_DEALER = '';
+$errorMessage = "";
+
+//Outcome Game
+$winner = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
+$loser = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
+
 
 // PLAY AGAIN
 if (isset($_POST['reset-button'])) {
@@ -42,91 +48,94 @@ else {
 }
 
 // Player Makes Choice
-if(isset($_POST['formChoice']) )
-{
-    $errorMessage = "";
-}
 
-if(!isset($_POST['formChoice']) || $_POST['formChoice'] == "null" )
+if(!isset($_POST['hit']) && !isset($_POST['stand']) && !isset($_POST['surrender']))
 {
     $errorMessage = "<div style='text-align: center;' class='alert alert-warning' role='warning'>Please make a choice! </div>";
 }
 
-//TODO: hit functionality
-//TODO: stand functionality
-//TODO: comparescore functionality
-
 // HIT Player
-if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'hit') {
+if (isset($_POST['hit'])) {
     $blackjack->getPlayer()->hit($blackjack->getDeck());
     $blackjack->getDealer()->hit($blackjack->getDeck());
 
     $blackjack->compareScores();
 
-   if ($blackjack->getPlayer()->hasLost() == 'false' && $blackjack->getDealer()->hasLost() == 'true' ) {
-        $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
-        $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
+   if ($blackjack->getPlayer()->hasLost() == false && $blackjack->getDealer()->hasLost() == true ) {
+        $_OUTCOME_PLAYER = $winner;
+        $_OUTCOME_DEALER = $loser;
     }
 
-   if ($blackjack->getPlayer()->hasLost() == 'true' && $blackjack->getDealer()->hasLost() == 'false' ) {
-        $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
-        $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
+   if ($blackjack->getPlayer()->hasLost() == true && $blackjack->getDealer()->hasLost() == false ) {
+        $_OUTCOME_DEALER = $winner;
+        $_OUTCOME_PLAYER = $loser;
     }
 
+   if ($blackjack->getPlayer()->hasLost() == true && $blackjack->getDealer()->hasLost() == true) {
+        $_OUTCOME_DEALER = $loser;
+        $_OUTCOME_PLAYER = $loser;
+   }
 
-    $_GAMESTATUS = "<div style='text-align: center;' class='alert alert-success' role='success'> PLAYER HITS </div>";
+    $_GAMESTATUS = "<div style='text-align: center;' class='alert alert-dark' role='success'> PLAYER CHOSE TO HIT </div>";
     $_SESSION['Created_Blackjack_Game'] = serialize($blackjack);
 }
 
 // Stand Player
-if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'stand') {
+if (isset($_POST['stand'])) {
 
     $blackjack->getDealer()->hit($blackjack->getDeck());
+    $blackjack->getPlayer()->hit($blackjack->getDeck());
+
+
+   // $blackjack->compareScores();
 
     // Compare Score
     $score_player = $blackjack->getPlayer()->getScore();
     $score_dealer = $blackjack->getDealer()->getScore();
 
     if ($score_dealer === $score_player) {
-        $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
-        $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
-    } elseif ($score_dealer = 21) {
-        $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
-        $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
-    } elseif ($score_player = 21) {
-        $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
-        $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
-    }
-    if ($score_player > 21) {
-        $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
-        $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
-    }
-    if ($score_dealer > 21) {
-        $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
-        $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
-    }
-    if ($score_player > $score_dealer) {
-        $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
-        $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
-    }
-    if ($score_dealer > $score_player) {
-        $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
-        $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
+        $_OUTCOME_DEALER = $winner;
+        $_OUTCOME_PLAYER = $loser;
+    } elseif ($score_dealer == 21) {
+        $_OUTCOME_DEALER = $winner;
+        $_OUTCOME_PLAYER = $loser;
+    } elseif ($score_player == 21) {
+        $_OUTCOME_PLAYER = $winner;
+        $_OUTCOME_DEALER = $loser;
     }
 
-    $_GAMESTATUS = "<div style='text-align: center;' class='alert alert-warning' role='warning'> PLAYER STANDS </div>";
+    if ($score_player > $score_dealer  && $score_player <= 21) {
+        $_OUTCOME_PLAYER = $winner;
+        $_OUTCOME_DEALER = $loser;
+    }
+
+    if ($score_player > $score_dealer  && $score_dealer <= 21) {
+        $_OUTCOME_PLAYER = $loser;
+        $_OUTCOME_DEALER = $winner;
+    }
+
+    if ($score_player > 21) {
+        $_OUTCOME_DEALER = $winner;
+        $_OUTCOME_PLAYER = $loser;
+    }
+    if ($score_dealer > 21) {
+        $_OUTCOME_PLAYER = $winner;
+        $_OUTCOME_DEALER = $loser;
+    }
+
+    $_GAMESTATUS = "<div style='text-align: center;' class='alert alert-dark' role='warning'> PLAYER CHOSE TO STAND </div>";
     $_SESSION['Created_Blackjack_Game'] = serialize($blackjack);
 }
 
 // SURRENDER Player
-if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'surrender') {
+if (isset($_POST['surrender'])) {
 
     if ($blackjack->getPlayer()->surrender() == 1 || $blackjack->getDealer()->playerSurrendered() == 0  ) {
-        $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
-        $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
+        $_OUTCOME_DEALER = $winner;
+        $_OUTCOME_PLAYER = $loser;
     }
 
-    $_GAMESTATUS = "<div style='text-align: center;' class='alert alert-warning' role='warning'> PLAYER SURRENDERED, DEALER WINS </div>";
+    $_GAMESTATUS = "<div style='text-align: center;' class='alert alert-dark' role='warning'> PLAYER CHOSE TO SURRENDERED, DEALER WINS </div>";
     $_SESSION['Created_Blackjack_Game'] = serialize($blackjack);
 }
 
@@ -147,22 +156,13 @@ if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'surrender') {
 <div class="container">
     <h1 style='text-align: center;';>Blackjack</h1>
 
-    <form method="post" action="">
+    <form method="post" action="" style='text-align: center; margin: 15px;'>
 
-        <fieldset style='display: inline;' >
-            <legend>Select Choice</legend>
-            <p>
-                <label>I want to ..</label>
-                <select name = "formChoice" >
-                    <option value = "null"></option>
-                    <option value = "hit">Hit</option>
-                    <option value = "stand">Stand</option>
-                    <option value = "surrender">Surrender</option>
-                </select>
-            </p>
-        </fieldset>
-        <input style='display: inline; margin-left: 15px; margin-bottom: 5px;' type="submit" name="submit-button" value="Submit" class="btn btn-sm btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off"/>
-        <input style='display: inline; margin-left: 15px; margin-bottom: 5px;' type="submit" name="reset-button" value="Play Again" class="btn btn-md btn-outline-dark" data-toggle="button" aria-pressed="false" autocomplete="off"/>
+        <input style='display: inline; width: 100px; margin-right: 15px;' type="submit" name="hit" value="Hit" class="btn btn-md btn-success" data-toggle="button" aria-pressed="false" autocomplete="off"/>
+        <input style='display: inline; width: 100px; margin-right: 15px;' type="submit" name="stand" value="Stand" class="btn btn-md btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off"/>
+        <input style='display: inline; width: 100px; margin-right: 15px;' type="submit" name="surrender" value="Surrender" class="btn btn-md btn-secondary" data-toggle="button" aria-pressed="false" autocomplete="off"/>
+
+        <input style='display: inline; width: 150px; margin-right: 15px;' type="submit" name="reset-button" value="Play Again" class="btn btn-lg btn-outline-dark" data-toggle="button" aria-pressed="false" autocomplete="off"/>
     </form>
 
     <p> <?php echo $errorMessage ?> </p>

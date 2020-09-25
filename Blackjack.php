@@ -20,34 +20,34 @@ class Blackjack {
         return $this->dealer;
     }
 
-    public function compareScores() {
+    public function compareScores()
+    {
         $dealer_score = $this->dealer->getScore();
         $player_score = $this->player->getScore();
 
         if ($player_score > 21) {
-            $this->player->$this->lost = true;
+            $this->player->setToLost();
         }
 
-        if ($dealer_score > 21){
-            $this->dealer->$this->lost = true;
+        if ($dealer_score > 21) {
+            $this->dealer->setToLost();
         }
 
         if ($player_score === $dealer_score && $player_score <= 21) {
-            $this->player->$this->lost = true;
+            $this->player->setToLost();
         } elseif ($player_score == 21) {
-            $this->dealer->$this->lost = true;
+            $this->dealer->setToLost();
         } elseif ($dealer_score == 21) {
-            $this->player->$this->lost = true;
+            $this->player->setToLost();
         }
 
         if ($player_score <= 21 && $player_score > $dealer_score) {
-            $this->dealer->$this->lost = true;
+            $this->dealer->setToLost();
         }
 
         if ($dealer_score <= 21 && $dealer_score > $player_score) {
-            $this->player->$this->lost = true;
+            $this->player->setToLost();
         }
-
     }
 
     public function __construct()

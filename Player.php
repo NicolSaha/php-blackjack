@@ -47,6 +47,7 @@ class Player
         return $this->lost;
     }
 
+
     public function showCards() : void {
         $Show_Cards = $this->cards;
         foreach($Show_Cards AS $card) {
@@ -72,14 +73,16 @@ class Dealer extends Player {
         }
     }
 
-    /*public function hasLost()
-    {
-        return parent::hasLost();
-    }*/
 
     public function __construct(Deck $deck)
     {
-        parent::__construct($deck);
+        $Card_One = $deck->drawCard();
+        $this->cards = [$Card_One];
+
+        if(isset($_POST['hit']) || isset($_POST['stand'])) {
+            $Card_Two = $deck->drawCard();
+            $this->cards = [$Card_One, $Card_Two];
+        }
     }
 
 }
