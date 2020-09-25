@@ -165,15 +165,15 @@ if (isset($_POST['surrender'])) {
 
     </br>
 
-    <H3 style='display: inline;'> Player <?php echo $_OUTCOME_PLAYER; ?> </H3>
-    <p style=' margin-top: -75px;'> <?php $blackjack->getPlayer()->showCards(); ?> </p>
-    <p style=' margin-top: -75px; margin-left: 15px;'> Score: <?php echo $blackjack->getPlayer()->getScore(); ?> </p>
+    <H2 style='display: block; text-align: center;'> Player <?php echo $_OUTCOME_PLAYER; ?> </H2>
+    <p style=' margin-top: -100px; text-align: center;'> <?php $blackjack->getPlayer()->showCards(); ?> </p>
+    <p style=' margin-top: -75px; text-align: center;'> Score: <?php echo $blackjack->getPlayer()->getScore(); ?> </p>
 
     </br>
 
-    <H3 style='display: inline;'> Dealer <?php echo $_OUTCOME_DEALER; ?> </H3>
-    <p style=' margin-top: -75px;'> <?php $blackjack->getDealer()->showCards(); ?> </p>
-    <p style=' margin-top: -75px; margin-left: 15px;'> Score: <?php echo $blackjack->getDealer()->getScore(); ?> </p>
+    <H2 style='display:block; text-align: center;'> Dealer <?php echo $_OUTCOME_DEALER; ?> </H2>
+    <p style=' margin-top: -100px; text-align: center;'> <?php $blackjack->getDealer()->showCards(); ?> </p>
+    <p style=' margin-top: -75px; text-align: center;'> Score: <?php echo $blackjack->getDealer()->getScore(); ?> </p>
 </div>
 </body>
 </html>
