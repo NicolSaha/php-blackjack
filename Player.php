@@ -9,17 +9,14 @@ class Player
 
     public function hit(Deck $deck)
     {
-            if ($this->getScore() <= 21) {
-                $hit_Card = $deck->drawCard();
-                array_push($this->cards, $hit_Card);
-            } elseif ($this->getScore() > 21) {
-                return $this->lost = true;
-            }
-    }
+        if ($this->getScore() <= 21) {
+            $hit_Card = $deck->drawCard();
+            array_push($this->cards, $hit_Card);
+        }
 
-    public function resetGame()
-    {
-        session_unset();
+        if ($this->getScore()> 21) {
+            $this->lost = true;
+        }
     }
 
     public function surrender()
@@ -32,13 +29,13 @@ class Player
         return $this->cards;
     }
 
-    public function getScore()
+    public function getScore(): int
     {
         $score = 0;
         foreach ($this->cards as $card) {
             $score += $card -> getValue();
         }
-        return $score;
+        return (int)$score;
     }
 
     public function hasLost()
@@ -71,15 +68,10 @@ class Dealer extends Player {
         }
     }
 
-    public function playerSurrendered()
-    {
-       return $this->lost = false;
-    }
-
-    public function hasLost()
+    /*public function hasLost()
     {
         return parent::hasLost();
-    }
+    }*/
 
     public function __construct(Deck $deck)
     {

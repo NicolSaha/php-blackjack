@@ -44,21 +44,19 @@ else {
 // Player Makes Choice
 if(isset($_POST['formChoice']) )
 {
-    //$varChoiceNextStep = $_POST['formChoice'];
     $errorMessage = "";
 }
 
 if(!isset($_POST['formChoice']) || $_POST['formChoice'] == "null" )
 {
     $errorMessage = "<div style='text-align: center;' class='alert alert-warning' role='warning'>Please make a choice! </div>";
-
 }
 
 // HIT Player
 if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'hit') {
     $blackjack->getPlayer()->hit($blackjack->getDeck());
 
-   if ($blackjack->getPlayer()->hasLost() == 1 || $blackjack->getDealer()->hasLost() == 0 ) {
+   if ($blackjack->getPlayer()->hasLost() == 'false' && $blackjack->getDealer()->hasLost() == 'true' ) {
         $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
         $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
     } else {
@@ -66,14 +64,15 @@ if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'hit') {
         $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
     }
 
-    $_SESSION['Created_Blackjack_Game'] = serialize($blackjack);
     $_GAMESTATUS = "<div style='text-align: center;' class='alert alert-success' role='success'> PLAYER HITS </div>";
+    $_SESSION['Created_Blackjack_Game'] = serialize($blackjack);
 }
 
 // Stand Player
 if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'stand') {
-    $_SESSION['Created_Blackjack_Game'] = serialize($blackjack);
+
     $blackjack->getDealer()->hit($blackjack->getDeck());
+
     // Compare Score
     $score_player = $blackjack->getPlayer()->getScore();
     $score_dealer = $blackjack->getDealer()->getScore();
@@ -92,21 +91,19 @@ if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'stand') {
     }
 
     $_GAMESTATUS = "<div style='text-align: center;' class='alert alert-warning' role='warning'> PLAYER STANDS </div>";
+    $_SESSION['Created_Blackjack_Game'] = serialize($blackjack);
 }
 
 // SURRENDER Player
 if (isset($_POST['formChoice']) && $_POST['formChoice'] === 'surrender') {
-    $_SESSION['Created_Blackjack_Game'] = serialize($blackjack);
 
     if ($blackjack->getPlayer()->surrender() == 1 || $blackjack->getDealer()->playerSurrendered() == 0  ) {
         $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
         $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
-    } else {
-        $_OUTCOME_PLAYER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-success' role='success'> WINNER  </p>";
-        $_OUTCOME_DEALER = "<p style='text-align: center; display: inline;' class='col-3 alert alert-danger' role='danger'> LOSER  </p>";
     }
-    $blackjack->getPlayer()->resetGame();
+
     $_GAMESTATUS = "<div style='text-align: center;' class='alert alert-warning' role='warning'> PLAYER SURRENDERED, DEALER WINS </div>";
+    $_SESSION['Created_Blackjack_Game'] = serialize($blackjack);
 }
 
 ?>
