@@ -75,15 +75,12 @@ class Dealer extends Player {
 
     public function __construct(Deck $deck)
     {
-        /* do we see 1 or 2 cards of the dealer at the start?
          $Card_One = $deck->drawCard();
          $this->cards = [$Card_One];
 
          if(isset($_POST['hit']) || isset($_POST['stand'])) {
              $Card_Two = $deck->drawCard();
              $this->cards = [$Card_One, $Card_Two];
-         } */
-
-        parent::__construct($deck);
+         }
     }
 }
