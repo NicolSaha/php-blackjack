@@ -10,8 +10,8 @@ class Player
     public function hit(Deck $deck)
     {
         if ($this->getScore() <= 21) {
-            $hit_Card = $deck->drawCard();
-            array_push($this->cards, $hit_Card);
+            $cardDrawn = $deck->drawCard();
+            array_push($this->cards, $cardDrawn);
         }
 
         if ($this->getScore()> 21) {
@@ -84,3 +84,6 @@ class Dealer extends Player {
          }
     }
 }
+
+//TODO: dealer shows second card before player gets a 3rd one
+//TODO: player needs to be able to hit again before score gets calculated

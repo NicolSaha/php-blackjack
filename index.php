@@ -56,8 +56,9 @@ if(!isset($_POST['hit']) && !isset($_POST['stand']) && !isset($_POST['surrender'
 
 // HIT Player
 if (isset($_POST['hit'])) {
-    $blackjack->getPlayer()->hit($blackjack->getDeck());
     $blackjack->getDealer()->hit($blackjack->getDeck());
+
+    $blackjack->getPlayer()->hit($blackjack->getDeck());
 
     $blackjack->compareScores();
 
